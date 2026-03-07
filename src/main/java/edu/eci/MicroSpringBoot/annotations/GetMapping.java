@@ -1,4 +1,4 @@
-package edu.eci.MicroSpringBoot;
+package edu.eci.MicroSpringBoot.annotations;
 
 import java.lang.annotation.*;
 

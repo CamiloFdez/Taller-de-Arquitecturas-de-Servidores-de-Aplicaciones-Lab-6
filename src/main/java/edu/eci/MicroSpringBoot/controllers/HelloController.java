@@ -1,4 +1,6 @@
-package edu.eci.MicroSpringBoot;
+package edu.eci.MicroSpringBoot.controllers;
+
+import edu.eci.MicroSpringBoot.annotations.GetMapping;
 
 @RestController
 public class HelloController {

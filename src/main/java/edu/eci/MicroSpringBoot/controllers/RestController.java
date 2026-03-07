@@ -1,4 +1,4 @@
-package edu.eci.MicroSpringBoot;
+package edu.eci.MicroSpringBoot.controllers;
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)

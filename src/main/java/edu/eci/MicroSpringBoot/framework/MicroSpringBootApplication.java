@@ -1,4 +1,4 @@
-package edu.eci.MicroSpringBoot;
+package edu.eci.MicroSpringBoot.framework;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -7,6 +7,9 @@ import java.util.Map;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import edu.eci.MicroSpringBoot.annotations.GetMapping;
+import edu.eci.MicroSpringBoot.controllers.RestController;
 
 @SpringBootApplication
 public class MicroSpringBootApplication {
