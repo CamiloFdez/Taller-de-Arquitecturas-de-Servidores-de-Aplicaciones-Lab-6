@@ -1,40 +1,71 @@
 package edu.eci.MicroSpringBoot.framework;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import edu.eci.MicroSpringBoot.annotations.GetMapping;
-import edu.eci.MicroSpringBoot.controllers.RestController;
+import edu.eci.MicroSpringBoot.annotations.RequestParam;
+import edu.eci.MicroSpringBoot.annotations.RestController;
 
-@SpringBootApplication
+
 public class MicroSpringBootApplication {
 
-	static Map<String, Method> controllerMethods = new HashMap<>();
+    public static void main(String[] args) throws Exception {
 
-	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
-		SpringApplication.run(MicroSpringBootApplication.class, args);
-		System.out.println("Cargando componentes");
+        System.out.println("Cargando componentes...");
 
-		Class c = Class.forName(args[0]);
+        Class<?> c = Class.forName(args[0]);
 
-		if(c.isAnnotationPresent(RestController.class)){
-			for(Method m: c.getDeclaredMethods()){
-				if(m.isAnnotationPresent(GetMapping.class)){
-					GetMapping anotacion = m.getAnnotation(GetMapping.class);
-					String path = anotacion.value();
-					controllerMethods.put(path, m);
-				}
-			}
-		}
+        if (c.isAnnotationPresent(RestController.class)) {
 
-		System.out.println("Invoking Method for path: " + args[1]);
-		Method m = controllerMethods.get(args[1]);
-		System.out.println(m.invoke(null));
-	}
+            Object controllerInstance = c.getDeclaredConstructor().newInstance();
 
+            for (Method m : c.getDeclaredMethods()) {
+
+                if (m.isAnnotationPresent(GetMapping.class)) {
+
+                    GetMapping annotation = m.getAnnotation(GetMapping.class);
+                    String path = annotation.value();
+
+                    System.out.println("Registrando endpoint: " + path);
+
+                    HttpServer.get(path, (req, res) -> {
+                        try {
+
+                            var params = m.getParameters();
+                            Object[] argsValues = new Object[params.length];
+
+                            for (int i = 0; i < params.length; i++) {
+
+                                if (params[i].isAnnotationPresent(RequestParam.class)) {
+
+                                    RequestParam rp = params[i].getAnnotation(RequestParam.class);
+
+                                    String paramName = rp.value();
+                                    String defaultValue = rp.defaultValue();
+
+                                    String value = req.getValue(paramName);
+
+                                    if (value == null) {
+                                        value = defaultValue;
+                                    }
+
+                                    argsValues[i] = value;
+                                }
+                            }
+
+                            return (String) m.invoke(controllerInstance, argsValues);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return "Error ejecutando método";
+                        }
+                    });
+                }
+            }
+        }
+
+        HttpServer.staticfiles("webroot/public");
+
+        HttpServer.main(new String[]{});
+    }
 }
