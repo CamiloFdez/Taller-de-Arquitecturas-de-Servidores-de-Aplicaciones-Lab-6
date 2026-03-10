@@ -138,8 +138,30 @@ The application provides the following REST services:
 | `/index.html`                    | Here you can find all the endpoints and navegate to them.      |
 
 Here are the images of the endpoints in action:
+
 - `/`
-![image](
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/localhost8080.PNG)
+
+- `/pi`
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/pi.PNG)
+
+- `/hello`
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/hello.PNG)
+
+- `/greeting?name=YourName`
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/greetingName.PNG)
+
+- `/greeting`
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/greeting.PNG)
+
+- `/index.html`
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/indexHtml.PNG)
 
 ---
 
