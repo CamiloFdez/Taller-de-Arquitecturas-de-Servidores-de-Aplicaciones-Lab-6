@@ -137,6 +137,10 @@ The application provides the following REST services:
 | `/greeting`                    | Returns a default greeting message.      |
 | `/index.html`                    | Here you can find all the endpoints and navegate to them.      |
 
+Here are the images of the endpoints in action:
+- `/`
+![image](
+
 ---
 
 # Static Files
