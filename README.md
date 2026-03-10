@@ -136,6 +136,7 @@ The application provides the following REST services:
 | `/greeting?name=YourName`  | Returns a personalized greeting message. |
 | `/greeting`                    | Returns a default greeting message.      |
 | `/index.html`                    | Here you can find all the endpoints and navegate to them.      |
+| `/image.png`                    | Here you can find the image file.      |
 
 Here are the images of the endpoints in action:
 
@@ -163,6 +164,10 @@ Here are the images of the endpoints in action:
 
 ![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/indexHtml.PNG)
 
+- `/image.png`
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/indexImage.PNG)
+
 ---
 
 # Static Files
@@ -185,7 +190,53 @@ public/
 ---
 
 # AWS Deployment
-The application can be deployed on AWS using Elastic Beanstalk or EC2 instances.
+The application can be deployed on AWS using Elastic Beanstalk or EC2 instances. First of all you need to create an instance like this:
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/instancia.PNG)
+
+After creating the instance you will see this:
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/instanciaCreated.PNG)
+
+Now we can see that the instance is running and we can connect to it using SSH. Once connected, we can install Java and run the application.
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/instanciaConectada.PNG)
+
+Before this we have to go to security and put the port 8080 open to the world, so we can access the application from our local machine.
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/security.PNG)
+
+Now we can open git bash and connect to the instance using SSH:
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/conectando.PNG)
+
+Before opening we have to pass the file with sftp so the zip file its going to be save in the instance:
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/passingFile.PNG)
+
+Now we can unzip the file:
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/unzip.PNG)
+
+Now we can install java in the instance:
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/javainstallation.PNG)
+
+After that we can run the application:
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/deployAws.PNG)
+
+And we can see our application running in AWS:
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/awsDeployWebpage.PNG)
+
+Here is the index page of the application running in AWS:
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/indexAws.PNG)
+
+And last but not least here is the image file running in AWS:
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/awsimagenpng.PNG)
 
 ---
 
