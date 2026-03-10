@@ -240,6 +240,18 @@ And last but not least here is the image file running in AWS:
 
 ---
 
+# Test
+
+We made test for each endpoint with JUnit and you can see using this command:
+
+```bash
+mvn test
+```
+
+And here is the output of the test:
+
+![image](https://github.com/CamiloFdez/Taller-de-Arquitecturas-de-Servidores-de-Aplicaciones-Lab-6/blob/main/images/tests.PNG)
+
 # Conclusion
 This project demonstrates the development of a simple Java Web Microframework that allows for the creation of REST services using annotations. It provides a basic structure for handling HTTP requests, routing, and serving static files, making it easier to develop web applications in Java. Also with AWS deployment capabilities, it can be easily hosted and accessed from anywhere.
 
