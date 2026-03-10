@@ -6,7 +6,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>4.0.3</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/> 
 	</parent>
 	<groupId>edu.eci</groupId>
 	<artifactId>MicroSpringBoot</artifactId>
@@ -47,6 +47,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>edu.eci.MicroSpringBoot.framework.MicroSpringBootApplication</mainClass>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

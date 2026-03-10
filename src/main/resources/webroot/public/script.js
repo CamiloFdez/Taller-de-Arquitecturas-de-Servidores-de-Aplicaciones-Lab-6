@@ -1,4 +1,4 @@
-console.log("AREP Microframework loaded successfully 🚀");
+console.log("AREP Microframework loaded successfully");
 
 function goHello() {
     const name = document.getElementById("nameInput").value;
@@ -8,5 +8,5 @@ function goHello() {
         return;
     }
 
-    window.location.href = `/App/hello?name=${encodeURIComponent(name)}`;
+    window.location.href = `/greeting?name=${encodeURIComponent(name)}`;
 }

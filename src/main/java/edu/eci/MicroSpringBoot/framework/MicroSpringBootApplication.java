@@ -1,19 +1,50 @@
 package edu.eci.MicroSpringBoot.framework;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 import edu.eci.MicroSpringBoot.annotations.GetMapping;
 import edu.eci.MicroSpringBoot.annotations.RequestParam;
 import edu.eci.MicroSpringBoot.annotations.RestController;
 
-
 public class MicroSpringBootApplication {
 
     public static void main(String[] args) throws Exception {
 
-        System.out.println("Cargando componentes...");
+        System.out.println("Escaneando controllers...");
 
-        Class<?> c = Class.forName(args[0]);
+        scanControllers("edu.eci.MicroSpringBoot.controllers");
+
+        HttpServer.staticfiles("webroot/public");
+
+        HttpServer.main(new String[]{});
+    }
+
+    private static void scanControllers(String packageName) throws Exception {
+
+        String path = packageName.replace('.', '/');
+
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        var resource = classLoader.getResource(path);
+
+        if (resource == null) return;
+
+        File folder = new File(resource.toURI());
+
+        for (File file : folder.listFiles()) {
+
+            if (file.getName().endsWith(".class")) {
+
+                String className = packageName + "." + file.getName().replace(".class", "");
+
+                loadController(className);
+            }
+        }
+    }
+
+    private static void loadController(String className) throws Exception {
+
+        Class<?> c = Class.forName(className);
 
         if (c.isAnnotationPresent(RestController.class)) {
 
@@ -29,6 +60,7 @@ public class MicroSpringBootApplication {
                     System.out.println("Registrando endpoint: " + path);
 
                     HttpServer.get(path, (req, res) -> {
+
                         try {
 
                             var params = m.getParameters();
@@ -45,9 +77,7 @@ public class MicroSpringBootApplication {
 
                                     String value = req.getValue(paramName);
 
-                                    if (value == null) {
-                                        value = defaultValue;
-                                    }
+                                    if (value == null) value = defaultValue;
 
                                     argsValues[i] = value;
                                 }
@@ -63,9 +93,5 @@ public class MicroSpringBootApplication {
                 }
             }
         }
-
-        HttpServer.staticfiles("webroot/public");
-
-        HttpServer.main(new String[]{});
     }
 }
