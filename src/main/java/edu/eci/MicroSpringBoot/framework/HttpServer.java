@@ -7,60 +7,49 @@ import java.util.Map;
 
 public class HttpServer {
 
-    private static String staticFilesPath = "";
+    private static String staticFilesPath = "webroot";
 
     public static void main(String[] args) throws IOException, URISyntaxException {
 
-        ServerSocket serverSocket = null;
+        ServerSocket serverSocket;
 
         try {
             serverSocket = new ServerSocket(8080);
+            System.out.println("Servidor iniciado en puerto 8080");
         } catch (IOException e) {
             System.err.println("Could not listen on port: 8080.");
-            System.exit(1);
+            return;
         }
 
-        Socket clientSocket = null;
-        boolean running = true;
+        while (true) {
 
-        while (running) {
+            System.out.println("Listo para recibir ...");
 
-            Map<String, String> parameters = new HashMap<>();
+            Socket clientSocket = serverSocket.accept();
 
-            try {
-                System.out.println("Listo para recibir ...");
-                clientSocket = serverSocket.accept();
-            } catch (IOException e) {
-                System.err.println("Accept failed.");
-                System.exit(1);
-            }
-
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(clientSocket.getInputStream()));
 
-            String inputLine, outputLine;
+            OutputStream outStream = clientSocket.getOutputStream();
+            PrintWriter out = new PrintWriter(outStream, true);
 
+            Map<String, String> parameters = new HashMap<>();
+
+            String inputLine;
             boolean isFirstLine = true;
             String reqpath = "";
 
             while ((inputLine = in.readLine()) != null) {
 
-                System.out.println("Received: " + inputLine);
-
                 if (isFirstLine) {
 
-                    String[] flTokens = inputLine.split(" ");
-                    String struripath = flTokens[1];
+                    String[] requestParts = inputLine.split(" ");
+                    String uriStr = requestParts[1];
 
-                    URI uripath = new URI(struripath);
-                    reqpath = uripath.getPath();
+                    URI uri = new URI(uriStr);
+                    reqpath = uri.getPath();
 
-                    System.out.println("Path: " + reqpath);
-
-                    isFirstLine = false;
-
-                    String query = uripath.getQuery();
+                    String query = uri.getQuery();
 
                     if (query != null) {
                         String[] params = query.split("&");
@@ -74,6 +63,8 @@ public class HttpServer {
                             }
                         }
                     }
+
+                    isFirstLine = false;
                 }
 
                 if (!in.ready()) {
@@ -82,25 +73,21 @@ public class HttpServer {
             }
 
             HttpRequest request = new HttpRequest(parameters);
-
             WebMethod currentwm = WebFramework.getRoute(reqpath);
 
             if (currentwm != null) {
 
-                outputLine =
+                String responseBody = currentwm.execute(request, null);
+
+                String response =
                         "HTTP/1.1 200 OK\r\n" +
-                        "Content-Type: text/html\r\n" +
-                        "\r\n" +
+                        "Content-Type: text/html\r\n\r\n" +
                         "<!DOCTYPE html>" +
-                        "<html>" +
-                        "<head>" +
-                        "<meta charset=\"UTF-8\">" +
-                        "<title>Backend Service</title>" +
-                        "</head>" +
-                        "<body>" +
-                        currentwm.execute(request, null) +
-                        "</body>" +
-                        "</html>";
+                        "<html><body>" +
+                        responseBody +
+                        "</body></html>";
+
+                out.println(response);
 
             } else {
 
@@ -110,46 +97,35 @@ public class HttpServer {
 
                 if (fileStream != null) {
 
-                        String contentType = "text/html";
+                    String contentType = "text/html";
 
-                        if (filePath.endsWith(".png")) {
-                            contentType = "image/png";
-                        } else if (filePath.endsWith(".css")) {
-                            contentType = "text/css";
-                        } else if (filePath.endsWith(".js")) {
-                            contentType = "application/javascript";
-                        } else if (filePath.endsWith(".html")) {
-                            contentType = "text/html";
-                        }
+                    if (filePath.endsWith(".png")) contentType = "image/png";
+                    else if (filePath.endsWith(".css")) contentType = "text/css";
+                    else if (filePath.endsWith(".js")) contentType = "application/javascript";
+                    else if (filePath.endsWith(".html")) contentType = "text/html";
 
-                    BufferedReader fileReader = new BufferedReader(new InputStreamReader(fileStream));
-                    StringBuilder fileContent = new StringBuilder();
-                    String line;
-
-                    while ((line = fileReader.readLine()) != null) {
-                        fileContent.append(line).append("\n");
-                    }
-
-                    outputLine =
+                    String headers =
                             "HTTP/1.1 200 OK\r\n" +
-                            "Content-Type: " + contentType + "\r\n\r\n" +
-                            fileContent.toString();
+                            "Content-Type: " + contentType + "\r\n\r\n";
+
+                    outStream.write(headers.getBytes());
+                    fileStream.transferTo(outStream);
+                    outStream.flush();
 
                 } else {
 
-                    outputLine =
+                    String notFound =
                             "HTTP/1.1 404 Not Found\r\n\r\n" +
                             "File not found";
+
+                    out.println(notFound);
                 }
             }
 
-            out.println(outputLine);
-            out.close();
             in.close();
+            out.close();
             clientSocket.close();
         }
-
-        serverSocket.close();
     }
 
     public static void get(String path, WebMethod wm) {
@@ -158,5 +134,5 @@ public class HttpServer {
 
     public static void staticfiles(String path) {
         staticFilesPath = path;
-    }   
+    }
 }
